@@ -1,0 +1,73 @@
+#include <stdio.h>
+#include <stdbool.h>
+
+#define SIZE 9
+
+bool is_valid_sudoku(int board[SIZE][SIZE]) {
+    // Verifica linhas
+    for (int i = 0; i < SIZE; i++) {
+        bool seen[SIZE + 1] = {false}; // Usamos um array para rastrear números vistos
+        for (int j = 0; j < SIZE; j++) {
+            if (board[i][j] < 1 || board[i][j] > 9 || seen[board[i][j]]) {
+                return false;
+            }
+            seen[board[i][j]] = true;
+        }
+    }
+
+    // Verifica colunas
+    for (int j = 0; j < SIZE; j++) {
+        bool seen[SIZE + 1] = {false};
+        for (int i = 0; i < SIZE; i++) {
+            if (board[i][j] < 1 || board[i][j] > 9 || seen[board[i][j]]) {
+                return false;
+            }
+            seen[board[i][j]] = true;
+        }
+    }
+
+    // Verifica submatrizes 3x3
+    for (int box_row = 0; box_row < SIZE; box_row += 3) {
+        for (int box_col = 0; box_col < SIZE; box_col += 3) {
+            bool seen[SIZE + 1] = {false};
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 3; j++) {
+                    int num = board[box_row + i][box_col + j];
+                    if (num < 1 || num > 9 || seen[num]) {
+                        return false;
+                    }
+                    seen[num] = true;
+                }
+            }
+        }
+    }
+
+    return true;
+}
+
+int main() {
+    int n;
+    scanf("%d", &n); // Lê o número de matrizes
+
+    for (int instance = 1; instance <= n; instance++) {
+        int board[SIZE][SIZE];
+
+        // Lê a matriz
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
+                scanf("%d", &board[i][j]);
+            }
+        }
+
+        // Verifica se a matriz é válida
+        printf("Instancia %d\n", instance);
+        if (is_valid_sudoku(board)) {
+            printf("SIM\n");
+        } else {
+            printf("NAO\n");
+        }
+        printf("\n"); // Linha em branco após cada instância
+    }
+
+    return 0;
+}
