@@ -3,40 +3,38 @@
 
 #define SIZE 9
 
-bool is_valid_sudoku(int board[SIZE][SIZE]) {
-    // Verifica linhas
+bool sudokuvalido(int sudoku[SIZE][SIZE]) {
+    
     for (int i = 0; i < SIZE; i++) {
-        bool seen[SIZE + 1] = {false}; // Usamos um array para rastrear números vistos
+        bool repetidos[SIZE + 1] = {false}; 
         for (int j = 0; j < SIZE; j++) {
-            if (board[i][j] < 1 || board[i][j] > 9 || seen[board[i][j]]) {
+            if (repetidos[sudoku[i][j]]) {
                 return false;
             }
-            seen[board[i][j]] = true;
+            repetidos[sudoku[i][j]] = true;
         }
     }
 
-    // Verifica colunas
     for (int j = 0; j < SIZE; j++) {
-        bool seen[SIZE + 1] = {false};
+        bool repetidos[SIZE + 1] = {false};
         for (int i = 0; i < SIZE; i++) {
-            if (board[i][j] < 1 || board[i][j] > 9 || seen[board[i][j]]) {
+            if (repetidos[sudoku[i][j]]) {
                 return false;
             }
-            seen[board[i][j]] = true;
+            repetidos[sudoku[i][j]] = true;
         }
     }
 
-    // Verifica submatrizes 3x3
-    for (int box_row = 0; box_row < SIZE; box_row += 3) {
-        for (int box_col = 0; box_col < SIZE; box_col += 3) {
-            bool seen[SIZE + 1] = {false};
+    for (int linhaquad = 0; linhaquad < SIZE; linhaquad += 3) {
+        for (int colunaquad = 0; colunaquad < SIZE; colunaquad += 3) {
+            bool repetidos[SIZE + 1] = {false};
             for (int i = 0; i < 3; i++) {
                 for (int j = 0; j < 3; j++) {
-                    int num = board[box_row + i][box_col + j];
-                    if (num < 1 || num > 9 || seen[num]) {
+                    int num = sudoku[linhaquad + i][colunaquad + j];
+                    if (repetidos[num]) {
                         return false;
                     }
-                    seen[num] = true;
+                    repetidos[num] = true;
                 }
             }
         }
@@ -47,21 +45,19 @@ bool is_valid_sudoku(int board[SIZE][SIZE]) {
 
 int main() {
     int n;
-    scanf("%d", &n); // Lê o número de matrizes
+    scanf("%d", &n); 
 
     for (int instance = 1; instance <= n; instance++) {
-        int board[SIZE][SIZE];
+        int sudoku[SIZE][SIZE];
 
-        // Lê a matriz
         for (int i = 0; i < SIZE; i++) {
             for (int j = 0; j < SIZE; j++) {
-                scanf("%d", &board[i][j]);
+                scanf("%d", &sudoku[i][j]);
             }
         }
 
-        // Verifica se a matriz é válida
         printf("Instancia %d\n", instance);
-        if (is_valid_sudoku(board)) {
+        if (sudokuvalido(sudoku)) {
             printf("SIM\n");
         } else {
             printf("NAO\n");
