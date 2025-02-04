@@ -1,0 +1,79 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+
+int find_pos(const char *txt, const char *wd);
+
+int main() {
+    char txt[10001];
+    char txt_copy[10001];
+    char wd_list[128][51];
+    int **pos;
+    int n;
+
+    fgets(txt, sizeof(txt), stdin);
+    txt[strcspn(txt, "\n")] = '\0'; 
+    strcpy(txt_copy, txt); 
+    scanf("%d", &n);
+
+    pos = (int **)malloc(n * sizeof(int *));
+    for (int i = 0; i < n; i++) {
+        pos[i] = (int *)malloc(10001 * sizeof(int));
+    }
+
+    for (int i = 0; i < n; i++) {
+        scanf("%s", wd_list[i]);
+    }
+
+    for (int i = 0; i < n; i++) {
+        int j = 0;
+        char *token = strtok(txt_copy, " ");
+        int idx = 0; 
+
+        while (token != NULL) {
+            int found = find_pos(token, wd_list[i]);
+
+            if (found != -1) {
+                pos[i][j++] = idx + found;
+            }
+
+            idx += strlen(token) + 1; 
+
+            token = strtok(NULL, " ");
+        }
+
+        if (j == 0) {
+            printf("-1\n");
+        } else {
+            for (int k = 0; k < j; k++) {
+                printf("%d", pos[i][k]);
+                if (j > 1 && k != j-1){
+                    printf(" ");
+                }
+            }
+            printf("\n");
+        }
+
+        strcpy(txt_copy, txt);
+    }
+
+    for (int i = 0; i < n; i++) {
+        free(pos[i]);
+    }
+    free(pos);
+
+    return 0;
+}
+
+int find_pos(const char *txt, const char *wd) {
+    const char *found = strstr(txt, wd);
+
+    if (found) {
+        if ((found == txt || isspace(*(found - 1))) &&
+            (*(found + strlen(wd)) == '\0' || isspace(*(found + strlen(wd))))) {
+            return found - txt;
+        }
+    }
+    return -1;
+}
